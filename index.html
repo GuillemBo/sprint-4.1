@@ -3,10 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="styles.css" />
     <title>Document</title>
 </head>
 <body>
     
+    <div class="container">
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                <div class="card mt-5 text-center shadow" style="width: 45rem; padding: 70px;">
+                    <div class="card-body">
+                      <h5 class="card-title">Preparat per riure?</h5>
+                      <p class="card-text mt-5" id="randomJoke"></p>
+                      <a href="#" class="btn btn-info mt-4" onclick="mostrar()">Següent acudit</a>
+
+                        <form action="/action_page.php" class="mt-5" id="scores">
+                            <p>Valora l'acudit sent 1 la pitjor nota i 3 la millor:</p>
+                              <input type="radio" id="score1" name="score" value=1>
+                              <label for="html">1</label>
+                              <input type="radio" id="score2" name="score" value=2>
+                              <label for="css">2</label>
+                              <input type="radio" id="score3" name="score" value=3>
+                              <label for="javascript">3</label>
+                        </form>
+                        <a href="#" class="btn btn-sm btn-primary m-4" onclick="submitScore()">Valorar</a>
+                        <div id="respuesta"></div>
+                      
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </div>
 
 
     <script src="index.js"></script>
