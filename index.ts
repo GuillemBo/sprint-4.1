@@ -80,3 +80,4 @@ function submitScore(): void {
     
     console.log(reportJokes)
 }
+
