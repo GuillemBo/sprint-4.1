@@ -4,3 +4,11 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
   }
+
+.navbar {
+
+  background-image: url('https://t4.ftcdn.net/jpg/03/16/36/59/360_F_316365913_WKVKZW7gzsqqhkx4PgGyu0rArj5GykHK.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}

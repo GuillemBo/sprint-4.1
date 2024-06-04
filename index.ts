@@ -12,7 +12,6 @@ function mostrar() {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
-
         }
         
     })
@@ -79,5 +78,72 @@ function submitScore(): void {
     
     
     console.log(reportJokes)
+}
+
+const options = {
+    method: 'GET',
+    headers: {
+        'Accept': 'application/json',
+    }
+}
+
+
+const weatherTemp = async () => {
+    try {
+        const response = await fetch("https://api.openweathermap.org/data/2.5/weather?&units=metric&appid=e7704bc895b4a8d2dfd4a29d404285b6&lat=41.38879&lon=2.15899", options)
+        if (!response.ok) {
+            throw new Error("Error en la solicitud");
+        }
+        const data = response.json();
+        return data
+    } catch (error) {
+        console.error("An error has ocurred: ", error);
+        return null
+    }
+}
+
+
+const datosWeather = async () => {
+    const data = await weatherTemp();
+    if (data) {
+        let temp: Number = data.main.temp;
+        let icon = data.weather[0].icon;
+        let url = `https://openweathermap.org/img/wn/${icon}@2x.png`
+        let imageElement = document.createElement('img')
+        imageElement.src = url
+        document.getElementById('weatherReport').appendChild(imageElement);
+        document.getElementById('weatherReport').innerHTML += `${temp.toFixed(1)} C º`
+    } else {
+        console.log("Data couldn't be obtained");
+    }
+}
+
+datosWeather()
+
+
+const chuckJokes = async () => {
+    try {
+        const response = await fetch('https://api.chucknorris.io/jokes/random', options);
+        if (!response.ok) {
+            throw new Error("Error en la solicitud");
+        }
+        const data = (response).json();
+        console.log(data)
+        return data
+
+    } catch (error) {
+        console.error("An error has ocurred: ", error);
+        return null
+    }
+}
+
+const datosChuck = async () => {
+    const data = await chuckJokes();
+    if (data) {
+        console.log(data.value)
+        return data.value
+    } else {
+        console.log("Data couldn't be obtained");
+    }
 }
 
