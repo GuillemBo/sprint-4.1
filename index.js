@@ -7,9 +7,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-mostrar();
+jokes();
 let randomJoke = '';
-function mostrar() {
+let actualJoke = '';
+function jokes() {
     document.getElementById('respuesta').innerHTML = '';
     fetch("https://icanhazdadjoke.com/", {
         method: 'GET',
@@ -25,38 +26,12 @@ function mostrar() {
     })
         .then(data => {
         randomJoke = data.joke;
-        console.log(data.joke);
         document.getElementById('randomJoke').innerHTML = randomJoke;
+        actualJoke = randomJoke;
     })
         .catch(error => {
         console.error('There has been a problem with your fetch operation:', error);
     });
-}
-const reportJokes = [];
-function submitScore() {
-    let scores = document.getElementsByName('score');
-    let selectedScore;
-    for (const score of scores) {
-        if (score.checked) {
-            selectedScore = parseInt(score.value);
-            break;
-        }
-    }
-    const fechaActualISO = new Date().toISOString();
-    const report1 = {
-        joke: randomJoke,
-        score: selectedScore,
-        date: fechaActualISO
-    };
-    let existentJoke = reportJokes.find(element => element.joke == randomJoke);
-    if (!existentJoke) {
-        reportJokes.push(report1);
-        document.getElementById('respuesta').innerHTML = 'Gracies per la valoració';
-    }
-    else {
-        document.getElementById('respuesta').innerHTML = 'Ja has valorat aquest acudit';
-    }
-    console.log(reportJokes);
 }
 const options = {
     method: 'GET',
@@ -101,7 +76,6 @@ const chuckJokes = () => __awaiter(this, void 0, void 0, function* () {
             throw new Error("Error en la solicitud");
         }
         const data = (response).json();
-        console.log(data);
         return data;
     }
     catch (error) {
@@ -109,13 +83,81 @@ const chuckJokes = () => __awaiter(this, void 0, void 0, function* () {
         return null;
     }
 });
+let randomChuck = '';
 const datosChuck = () => __awaiter(this, void 0, void 0, function* () {
     const data = yield chuckJokes();
     if (data) {
-        console.log(data.value);
-        return data.value;
+        document.getElementById('randomJoke').innerHTML = data.value;
+        randomChuck = data.value;
+        actualJoke = randomChuck;
+        return randomChuck;
     }
     else {
         console.log("Data couldn't be obtained");
     }
 });
+function mostrar() {
+    let random = Math.floor(Math.random() * 2);
+    if (random == 0) {
+        jokes();
+    }
+    else {
+        datosChuck();
+    }
+}
+const reportJokes = [];
+function submitScore() {
+    let scores = document.getElementsByName('score');
+    let selectedScore;
+    for (const score of scores) {
+        if (score.checked) {
+            selectedScore = parseInt(score.value);
+            break;
+        }
+    }
+    const fechaActualISO = new Date().toISOString();
+    const report1 = {
+        joke: randomJoke,
+        score: selectedScore,
+        date: fechaActualISO,
+        changed: false
+    };
+    const report2 = {
+        joke: randomChuck,
+        score: selectedScore,
+        date: fechaActualISO,
+        changed: false
+    };
+    let existentJoke = reportJokes.find(element => element.joke == randomJoke);
+    let existentJoke2 = reportJokes.find(element => element.joke == randomChuck);
+    if (selectedScore == undefined) {
+        document.getElementById('respuesta').innerHTML = 'You didn/t select a score';
+        return;
+    }
+    if (!existentJoke && randomJoke == actualJoke) {
+        reportJokes.push(report1);
+        document.getElementById('respuesta').innerHTML = 'Gracies per la valoració';
+    }
+    else if (!existentJoke2 && actualJoke == randomChuck) {
+        reportJokes.push(report2);
+        document.getElementById('respuesta').innerHTML = 'Gracies per la valoració';
+    }
+    else {
+        if (existentJoke && !existentJoke.changed && randomJoke === actualJoke) {
+            existentJoke.score = selectedScore;
+            existentJoke.date = fechaActualISO;
+            existentJoke.changed = true;
+            document.getElementById('respuesta').innerHTML = 'Has canviat la teva valoració';
+        }
+        else if (existentJoke2 && !existentJoke2.changed) {
+            existentJoke2.score = selectedScore;
+            existentJoke2.date = fechaActualISO;
+            existentJoke2.changed = true;
+            document.getElementById('respuesta').innerHTML = 'Has canviat la teva valoració';
+        }
+        else {
+            document.getElementById('respuesta').innerHTML = 'Ja has valorat aquest acudit';
+        }
+    }
+    console.log(reportJokes);
+}

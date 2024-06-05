@@ -1,9 +1,10 @@
 
-mostrar()
+jokes()
 
 let randomJoke: string = ''
+let actualJoke: String = ''
 
-function mostrar() {
+function jokes() {
 
     document.getElementById('respuesta').innerHTML = ''
 
@@ -25,9 +26,9 @@ function mostrar() {
     })
     
     .then(data => {
-        randomJoke = data.joke
-        console.log(data.joke);
+        randomJoke = data.joke;
         document.getElementById('randomJoke').innerHTML = randomJoke
+        actualJoke = randomJoke
     })
     
     .catch(error => {
@@ -37,48 +38,7 @@ function mostrar() {
 }
 
 
-type report = {
-    joke: string
-    score: number
-    date: `${number}-${number}-${number}T${number}:${number}:${number}.${number}Z`;
-}
 
-const reportJokes = [];
-
-
-function submitScore(): void {
-
-    let scores = document.getElementsByName('score') as NodeListOf<HTMLInputElement>;
-    
-    let selectedScore: number | null;
-
-    for (const score of scores) {
-        if (score.checked) {
-            selectedScore = parseInt(score.value);
-            break;
-        }
-    }
-
-    const fechaActualISO = new Date().toISOString();
-
-    const report1: report = {
-        joke: randomJoke,
-        score: selectedScore,
-        date: fechaActualISO as `${number}-${number}-${number}T${number}:${number}:${number}.${number}Z`
-    }
-
-    let existentJoke = reportJokes.find(element => element.joke == randomJoke);
-
-    if (!existentJoke){
-        reportJokes.push(report1)
-        document.getElementById('respuesta').innerHTML = 'Gracies per la valoració'
-    } else {
-        document.getElementById('respuesta').innerHTML = 'Ja has valorat aquest acudit'
-    }
-    
-    
-    console.log(reportJokes)
-}
 
 const options = {
     method: 'GET',
@@ -128,22 +88,114 @@ const chuckJokes = async () => {
             throw new Error("Error en la solicitud");
         }
         const data = (response).json();
-        console.log(data)
         return data
-
+        
     } catch (error) {
         console.error("An error has ocurred: ", error);
         return null
     }
 }
 
+let randomChuck = ''
+
 const datosChuck = async () => {
     const data = await chuckJokes();
     if (data) {
-        console.log(data.value)
-        return data.value
+        document.getElementById('randomJoke').innerHTML = data.value
+        randomChuck = data.value
+        actualJoke = randomChuck
+        return randomChuck
     } else {
         console.log("Data couldn't be obtained");
     }
+}
+
+
+function mostrar() {
+
+    let random = Math.floor(Math.random() * 2)
+
+    if (random == 0){
+        jokes()
+    } else {
+        datosChuck()
+    }
+
+}
+
+
+type report = {
+    joke: string
+    score: number
+    date: `${number}-${number}-${number}T${number}:${number}:${number}.${number}Z`
+    changed: boolean;
+}
+
+
+const reportJokes = [];
+
+
+function submitScore(): void {
+
+    let scores = document.getElementsByName('score') as NodeListOf<HTMLInputElement>;
+    
+    let selectedScore: number | null;
+
+    for (const score of scores) {
+        if (score.checked) {
+            selectedScore = parseInt(score.value);
+            break;
+        }
+    }
+
+    const fechaActualISO = new Date().toISOString();
+
+    const report1: report = {
+        joke: randomJoke,
+        score: selectedScore,
+        date: fechaActualISO as `${number}-${number}-${number}T${number}:${number}:${number}.${number}Z`,
+        changed: false
+    }
+ 
+    const report2: report = {
+        joke: randomChuck,
+        score: selectedScore,
+        date: fechaActualISO as `${number}-${number}-${number}T${number}:${number}:${number}.${number}Z`,
+        changed: false
+    }
+
+
+    let existentJoke = reportJokes.find(element => element.joke == randomJoke);
+    let existentJoke2 = reportJokes.find(element => element.joke == randomChuck)
+
+
+    if (selectedScore == undefined) {
+        document.getElementById('respuesta').innerHTML = 'You didn/t select a score'
+        return 
+    }
+    if (!existentJoke && randomJoke == actualJoke){
+        reportJokes.push(report1)
+        document.getElementById('respuesta').innerHTML = 'Gracies per la valoració'
+    } else if (!existentJoke2 && actualJoke == randomChuck){
+        reportJokes.push(report2)
+        document.getElementById('respuesta').innerHTML = 'Gracies per la valoració'
+    } else {
+
+        if (existentJoke && !existentJoke.changed && randomJoke === actualJoke) {
+            existentJoke.score = selectedScore;
+            existentJoke.date = fechaActualISO as `${number}-${number}-${number}T${number}-${number}-${number}.${number}Z`;
+            existentJoke.changed = true;
+            document.getElementById('respuesta').innerHTML = 'Has canviat la teva valoració';
+        } else if (existentJoke2 && !existentJoke2.changed) {
+            existentJoke2.score = selectedScore;
+            existentJoke2.date = fechaActualISO as `${number}-${number}-${number}T${number}-${number}-${number}.${number}Z`;
+            existentJoke2.changed = true;
+            document.getElementById('respuesta').innerHTML = 'Has canviat la teva valoració';
+        } else {
+            document.getElementById('respuesta').innerHTML = 'Ja has valorat aquest acudit';
+        }
+    }
+    
+    console.log(reportJokes)
 }
 
