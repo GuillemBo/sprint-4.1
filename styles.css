@@ -12,3 +12,33 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
+
+.blob-background {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-52%);
+  width: 100%;
+  height: 150%;
+  z-index: -1;
+}
+
+.card {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-body {
+  position: relative;
+  z-index: 1;
+}
+
+.custom-mt{
+  margin-top: 240px;
+}
+
+.card-text {
+  margin: auto;
+  max-width: 30rem;
+}
+

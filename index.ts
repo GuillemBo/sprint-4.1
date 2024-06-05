@@ -121,6 +121,7 @@ function mostrar() {
         datosChuck()
     }
 
+    cambiarFormaBlob()
 }
 
 
@@ -170,7 +171,7 @@ function submitScore(): void {
 
 
     if (selectedScore == undefined) {
-        document.getElementById('respuesta').innerHTML = 'You didn/t select a score'
+        document.getElementById('respuesta').innerHTML = 'No has seleccionat cap puntuació'
         return 
     }
     if (!existentJoke && randomJoke == actualJoke){
@@ -199,3 +200,22 @@ function submitScore(): void {
     console.log(reportJokes)
 }
 
+
+function cambiarFormaBlob() {
+
+    let randomNumber = Math.floor(Math.random() * 3) + 1;
+
+    let nuevaRuta: string = '';
+
+    if (randomNumber == 1) {
+        nuevaRuta = "images/blob.svg";
+    } else if (randomNumber == 2) {
+        nuevaRuta = "images/blob2.svg";
+    } else if (randomNumber == 3) {
+        nuevaRuta = "images/blob3.svg";
+    }
+
+    let imagen = document.getElementById("dynamicImg") as HTMLImageElement;
+
+    imagen.src = nuevaRuta;
+}
